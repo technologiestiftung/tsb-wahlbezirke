@@ -10,6 +10,12 @@ REACT_APP_MAP_STYLE={{MAPBOX_STYLE_URL}}
 NODE_PATH=src/
 ```
 
+### Planned features:
+- [] Transfer *Wahlblöcke* between direct *Wahlbezirke* neighbours (via Dropdown)
+- [] Recalculate *Wahlbezirke* shapes.
+- [] Colorcoding of population / *Wahlblock*
+- [] Comment function for *Wahlbezirke* and *Wahlblöcke*
+- [] Tooltip distincs between *Wahlbezirke* and *Wahlblöcke*
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
