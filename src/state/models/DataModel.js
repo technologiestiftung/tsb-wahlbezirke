@@ -1,27 +1,36 @@
 import { action, thunk, computed } from 'easy-peasy';
 import history from '../../history';
-import { id } from 'utils';
+import { id, convertToInt } from 'utils';
 
 const DataModel = {
-  data: null,
+  dataBloecke: null,
+  dataWahlbezirke: null,
   detailData: false,
   highlightData: false,
   selectedData: false,
   isLoading: computed(state => !state.data),
-  loadDataSuccess: action((state, payload) => {
-    state.data = payload;
+  loadBloeckeDataSuccess: action((state, payload) => {
+    state.dataBloecke = payload;
+  }),
+  loadWahlbezirkeSuccess: action((state, payload) => {
+    state.dataWahlbezirke = payload;
   }),
   loadDataFail: action(state => {
     state.data = null;
   }),
   loadData: thunk(async actions => {
     try {
-      const response = await fetch('/data/data.geojson');
-      const data = await response.json();
-      data.features.map(feat => {
-        feat.properties.autoid = id();
-      });
-      actions.loadDataSuccess(data);
+      const bloecke = await fetch('/data/bloecke.geojson');
+      const wahlbezirke = await fetch('/data/wahlbezirke.geojson');
+
+      const dataBloecke = await bloecke.json();
+      const dataWahlbezirke = await wahlbezirke.json();
+
+      const parsedDataWahlbezirke = convertToInt(dataWahlbezirke,['WahlbezirkNummer']);
+      const parsedDataBloecke = convertToInt(dataBloecke,['BlockNummer', 'Bevoelkerung', 'WahlbezirkNummer']);
+
+      actions.loadBloeckeDataSuccess(parsedDataBloecke);
+      actions.loadWahlbezirkeSuccess(parsedDataWahlbezirke);
     } catch (_) {
       actions.loadDataFail();
     }

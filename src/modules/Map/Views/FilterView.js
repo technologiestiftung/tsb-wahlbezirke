@@ -1,13 +1,18 @@
 import React, { Fragment } from 'react';
+import { useStoreState } from 'easy-peasy';
 
-import MarkerLayer from '../Layer/MarkerLayer';
+import GeojsonLayer from '../Layer/GeojsonLayer';
 
 const FilterView = p => {
-  const { data } = p;
+  const dataWahlbezirke = useStoreState(state => state.dataWahlbezirke);
+  const dataBloecke = useStoreState(state => state.dataBloecke);
   return (
     <Fragment>
-      { data && (
-        <MarkerLayer data={data} />
+      { dataWahlbezirke && (
+        <GeojsonLayer data={dataWahlbezirke} />
+      )}
+      { dataBloecke && (
+        <GeojsonLayer data={dataBloecke} />
       )}
     </Fragment>
   )

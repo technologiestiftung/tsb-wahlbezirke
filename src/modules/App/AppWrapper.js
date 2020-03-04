@@ -21,7 +21,8 @@ const StyledWrapper = styled(Box)`
 
 const AppWrapper = () => {
   const isLoading = useStoreState(state => state.isLoading);
-  const data = useStoreState(state => state.data);
+  const dataWahlbezirke = useStoreState(state => state.dataWahlbezirke);
+  const dataBloecke = useStoreState(state => state.dataBloecke);
   const mapCenter = useStoreState(state => state.mapCenter);
   const mapZoom = useStoreState(state => state.mapZoom);
   const style = process.env.REACT_APP_MAP_STYLE;
@@ -34,9 +35,10 @@ const AppWrapper = () => {
         <LoadingOverlay loading={isLoading} />
         <Sidebar />
         <Nav />
-        { data && (
+        { dataWahlbezirke && dataBloecke && (
           <Map
-            data={data}
+            dataBloecke={dataBloecke}
+            dataWahlbezirke={dataWahlbezirke}
             mapCenter={mapCenter}
             mapZoom={mapZoom}
             style={style}

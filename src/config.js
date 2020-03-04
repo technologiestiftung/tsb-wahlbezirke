@@ -20,14 +20,14 @@ export default {
   },
   tooltip: [
     {
-      id: 'name',
+      id: 'BlockNummer',
       component: 'title',
-      label: 'Institution'
+      label: 'Block Nummer'
     },
     {
-      id: 'art_angebot',
+      id: 'Bevoelkerung',
       component: 'description',
-      label: 'Angebot'
+      label: 'Bevölkerung'
     },
     {
       id: 'bezeichnung',

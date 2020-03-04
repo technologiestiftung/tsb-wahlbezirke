@@ -28,7 +28,8 @@ const Map = p => {
     mapCenter,
     mapZoom,
     style,
-    data
+    dataBloecke,
+    dataWahlbezirke,
   } = p;
 
   return (
@@ -45,7 +46,7 @@ const Map = p => {
       >
         <Route
           exact path={['/', '/suche', '/liste', '/favoriten', '/info']} 
-          component={() => <FilterView data={data}/>}
+          component={() => <FilterView />}
         />
         <Tooltip />
         <LogoTile />

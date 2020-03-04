@@ -45,42 +45,6 @@ const navConfig = [
 ];
 
 const Nav = p => {
-
-  // handleClick(path) {
-
-  //   const {
-  //     initialFilter,
-  //     unfiltered,
-  //     setFilter,
-  //     setMapCenter,
-  //     resetDetailRoute,
-  //     setDetailData,
-  //     setSelectedData,
-  //     setHighlightData,
-  //     mapCenter
-  //   } = this.props;
-
-  //   if (path === 'Listenansicht' || path === 'Favoriten' || path == 'Suche und Filter' || path == 'Info' ) {
-  //     setFilter(unfiltered)
-  //   }
-
-  //   if (path === 'Suche und Filter') {
-  //     setFilter(initialFilter)
-  //   }
-
-  //   setDetailData(false)
-  //   setSelectedData(false);
-  //   setHighlightData(false);
-  //   resetDetailRoute();
-  // }
-
-  // componentDidMount() {
-  //   const {
-  //     unfiltered,
-  //     setFilter,
-  //   } = this.props;
-  //   setFilter(unfiltered)
-  // }
   const { location } = p;
   const { pathname } = location;
 
