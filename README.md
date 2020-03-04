@@ -11,11 +11,11 @@ NODE_PATH=src/
 ```
 
 ### Planned features:
-- [] Transfer *Wahlblöcke* between direct *Wahlbezirke* neighbours (via Dropdown)
-- [] Recalculate *Wahlbezirke* shapes.
-- [] Colorcoding of population / *Wahlblock*
-- [] Comment function for *Wahlbezirke* and *Wahlblöcke*
-- [] Tooltip distincs between *Wahlbezirke* and *Wahlblöcke*
+- [ ] Transfer *Wahlblöcke* between direct *Wahlbezirke* neighbours (via Dropdown)
+- [ ] Recalculate *Wahlbezirke* shapes.
+- [ ] Colorcoding of population / *Wahlblock*
+- [ ] Comment function for *Wahlbezirke* and *Wahlblöcke*
+- [ ] Tooltip distincs between *Wahlbezirke* and *Wahlblöcke* and hows correct content
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
