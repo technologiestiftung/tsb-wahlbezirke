@@ -1,67 +1,41 @@
-import { action, thunk, computed } from 'easy-peasy';
-import history from '../../history';
-import { id, convertToInt } from 'utils';
+import { action, thunk, computed, actionOn } from "easy-peasy";
+import { id } from "utils";
+import c from "config";
 
 const DataModel = {
-  dataBloecke: null,
-  dataWahlbezirke: null,
+  data: null,
   detailData: false,
   highlightData: false,
   selectedData: false,
-  isLoading: computed(state => !state.data),
-  loadBloeckeDataSuccess: action((state, payload) => {
-    state.dataBloecke = payload;
+  isLoading: computed((state) => {
+    return !state.data;
   }),
-  loadWahlbezirkeSuccess: action((state, payload) => {
-    state.dataWahlbezirke = payload;
+  loadDataSuccess: action((state, payload) => {
+    state.data = payload;
+    state.filteredData = payload;
   }),
-  loadDataFail: action(state => {
+  loadDataFail: action((state) => {
     state.data = null;
   }),
-  loadData: thunk(async actions => {
+  loadData: thunk(async (actions) => {
     try {
-      const bloecke = await fetch('/data/bloecke.geojson');
-      const wahlbezirke = await fetch('/data/wahlbezirke.geojson');
-
-      const dataBloecke = await bloecke.json();
-      const dataWahlbezirke = await wahlbezirke.json();
-
-      const parsedDataWahlbezirke = convertToInt(dataWahlbezirke,['WahlbezirkNummer']);
-      const parsedDataBloecke = convertToInt(dataBloecke,['BlockNummer', 'Bevoelkerung', 'WahlbezirkNummer']);
-
-      actions.loadBloeckeDataSuccess(parsedDataBloecke);
-      actions.loadWahlbezirkeSuccess(parsedDataWahlbezirke);
+      const response = await fetch("/data/data.geojson");
+      const data = await response.json();
+      data.features.map((feat) => {
+        feat.properties.autoid = id();
+        feat.properties.isFaved = false;
+      });
+      actions.loadDataSuccess(data);
     } catch (_) {
       actions.loadDataFail();
     }
   }),
-  enrichedData: computed(state => {
-    // do data transformation here!
-    if (state.data) {
-      return state.data;
-    } else {
-      return null;
-    }
+  setHighlightData: action((state, payload) => {
+    state.highlightData = payload;
+    state.mapCenter = payload ? payload.geometry.coordinates : c.map.mapCenter;
+    // state.mapZoom = payload ? [15] : c.map.mapZoom;
   }),
-  filteredData: computed(state => state.data),
-  setHighlightData: action((state, payload) => (state.highlightData = payload)),
   setSelectedData: action((state, payload) => (state.selectedData = payload)),
-  setDetailRoute: action((state, payload) => {
-    if (payload) {
-      const nextLocation = `?location=${payload}`;
-      return history.push(nextLocation);
-    }
-    history.push(history.location.pathname.replace(/\?location=.+/, ''));
-    state.detailData = false;
-  }),
-  setDetailRouteWithListPath: action((state, payload) => {
-    if (payload) {
-      const nextLocation = `/liste?location=${payload}`;
-      return history.push(nextLocation);
-    }
-    history.push(history.location.pathname.replace(/\?location=.+/, ''));
-    state.detailData = false;
-  })
 };
 
 export default DataModel;

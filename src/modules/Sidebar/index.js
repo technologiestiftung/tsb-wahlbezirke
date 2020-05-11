@@ -1,25 +1,14 @@
-import React, { PureComponent } from 'react';
-import styled from 'styled-components';
-import { Route, withRouter, Switch } from 'react-router-dom';
-import { useStoreState } from 'easy-peasy';
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import { Route, withRouter, Switch } from "react-router-dom";
 
-import SidebarList from './SidebarList/';
-import SidebarClose from './SidebarClose/';
-
-const SidebarWrapper = styled.div`
-  display: block;
-  background: #fefefe;
-  display: flex;
-  box-shadow: ${props => (props.isVisible ? props.theme.boxShadow : 'none')};
-  z-index: 1000;
-  position: absolute;
-  height: calc((100vh - 0px) - 24px);
-  margin: 12px;
-  transform: ${props => (props.isVisible ? 'translate3d(0, 0, 0)' : 'translate3d(-100%, 0, 0)')};
-  transition: transform .5s, box-shadow .5s;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-`;
+import SidebarInfo from "./SidebarInfo/";
+import SidebarFilter from "./SidebarFilter/";
+import SidebarList from "./SidebarList/";
+import SidebarFav from "./SidebarFav/";
+import SidebarClose from "./SidebarClose/";
+import Card from "components/Card/Card";
+import SidebarWrapper from './SidebarWrapper';
 
 const SidebarContent = styled.div`
   min-width: 370px;
@@ -27,27 +16,48 @@ const SidebarContent = styled.div`
   padding: 20px 15px;
 `;
 
-const Sidebar = p => {
-  const data = useStoreState(state => state.enrichedData);
-  console.log(p.history.location);
+const filterById = (geojson, id) => geojson ? geojson.features.find(feat => feat.properties.autoid === id) : false;
+
+const Sidebar = (p) => {
+  const { data, match, location} = p;
+  const { pathname } = location;
+  const isVisible = pathname !== '/';
+  const id = match.params.itemId;
+  let selectedItem = filterById(data,id);
+
   return (
-      <Route
-        path={['/liste']}
-        children={({ match }) => {
-          console.log(match);
-          return (
-            <SidebarWrapper isVisible={match}>
-              <SidebarClose />
-              <SidebarContent>
-                <Switch>
-                  { data && (<Route path="/liste" component={() =><SidebarList data={data}/>}/>)}
-                </Switch>
-              </SidebarContent>
-            </SidebarWrapper>
-          )
-        }}
-      />
-  )
-}
+    <SidebarWrapper isvisible={isVisible.toString()}>
+      <SidebarClose />
+      <SidebarContent>
+        <Switch>
+          <Route
+            path="/liste/:itemId"
+            render={() => {
+              if (selectedItem) {
+                return <Card data={selectedItem}/>
+              }
+            }}
+          />
+          <Route
+            path="/liste"
+            render={() => <SidebarList data={data} />}
+          />
+          <Route
+            path="/info"
+            render={() => <SidebarInfo />}
+          />
+          <Route
+            path="/favoriten"
+            render={() => <SidebarFav data={data} />}
+          />
+          <Route
+            path="/suche"
+            render={() => <SidebarFilter />}
+          />
+        </Switch>
+      </SidebarContent>
+    </SidebarWrapper>
+  );
+};
 
 export default withRouter(Sidebar);

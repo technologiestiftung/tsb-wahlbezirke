@@ -1,31 +1,34 @@
-import React from 'react';
-import { Box } from 'rebass/styled-components';
-import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
-import GlobalStyle from 'styles/GlobalStyle';
-import { withRouter } from 'react-router-dom';
-import Theme from 'styles/DefaultTheme';
-import { useStoreState } from 'easy-peasy';
+import React from "react";
+import { Box } from "rebass/styled-components";
+import styled, { createGlobalStyle } from "styled-components";
+import { ThemeProvider } from "theme-ui";
+import GlobalStyle from "styles/GlobalStyle";
+import { withRouter, Route } from "react-router-dom";
+import Theme from "styles/Theme";
+import { useStoreState } from "easy-peasy";
 
-import Map from 'modules/Map';
-import Sidebar from 'modules/Sidebar';
-import Nav from 'components/Nav';
-import LoadingOverlay from 'components/LoadingOverlay';
+import Map from "modules/Map";
+import Sidebar from "modules/Sidebar";
+import Nav from "components/Nav";
+import LoadingOverlay from "components/LoadingOverlay";
 
 const DynamicGlobalStyle = createGlobalStyle``;
 
 const StyledWrapper = styled(Box)`
   width: 100%;
   height: 100%;
-  transition: all .25s ease-in-out;
+  transition: all 0.25s ease-in-out;
 `;
 
 const AppWrapper = () => {
-  const isLoading = useStoreState(state => state.isLoading);
-  const dataWahlbezirke = useStoreState(state => state.dataWahlbezirke);
-  const dataBloecke = useStoreState(state => state.dataBloecke);
-  const mapCenter = useStoreState(state => state.mapCenter);
-  const mapZoom = useStoreState(state => state.mapZoom);
+  const isLoading = useStoreState((state) => state.isLoading);
+  const data = useStoreState((state) => state.data);
+  const filteredData = useStoreState((state) => state.filteredData);
+  const mapCenter = useStoreState((state) => state.mapCenter);
+  const mapZoom = useStoreState((state) => state.mapZoom);
   const style = process.env.REACT_APP_MAP_STYLE;
+
+  console.log(filteredData)
 
   return (
     <ThemeProvider theme={Theme}>
@@ -33,12 +36,14 @@ const AppWrapper = () => {
       <DynamicGlobalStyle />
       <StyledWrapper>
         <LoadingOverlay loading={isLoading} />
-        <Sidebar />
+        <Route
+          path={["/liste/:itemId", "/liste", "/", "/info"]}
+          render={() => <Sidebar data={filteredData} />}
+        />
         <Nav />
-        { dataWahlbezirke && dataBloecke && (
+        {filteredData && (
           <Map
-            dataBloecke={dataBloecke}
-            dataWahlbezirke={dataWahlbezirke}
+            data={filteredData}
             mapCenter={mapCenter}
             mapZoom={mapZoom}
             style={style}

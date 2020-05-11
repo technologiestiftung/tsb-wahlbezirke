@@ -1,13 +1,13 @@
-import React from 'react';
-import ReactMapboxGl from 'react-mapbox-gl';
-import styled from 'styled-components';
-import { withRouter, Route } from 'react-router-dom';
+import React from "react";
+import ReactMapboxGl from "react-mapbox-gl";
+import styled from "styled-components";
+import { withRouter, Route } from "react-router-dom";
 
-import FilterView from './Views/FilterView';
-import Tooltip from 'components/Tooltip';
-import LogoTile from './LogoTile';
+import MarkerLayer from "./Layer/MarkerLayer";
+import Tooltip from "components/Tooltip";
+import LogoTile from "./LogoTile";
 
-import c from 'config';
+import c from "config";
 
 const mapConfig = c.map.config;
 
@@ -23,14 +23,8 @@ const MapWrapper = styled.div`
   opacity: 1;
 `;
 
-const Map = p => {
-  const {
-    mapCenter,
-    mapZoom,
-    style,
-    dataBloecke,
-    dataWahlbezirke,
-  } = p;
+const Map = (p) => {
+  const { mapCenter, mapZoom, style, data } = p;
 
   return (
     <MapWrapper>
@@ -38,21 +32,17 @@ const Map = p => {
         zoom={mapZoom}
         center={mapCenter}
         style={style}
-        containerStyle={{ height: '100%', width: '100%' }}
-        // onStyleLoad={map => this.onStyleLoad(map)}
-        // onData={map => this.onData(map)}
-        // onClick={(map, e) => {this.posArray(e)}}
-        // flyToOptions={config.map.flyToOptions}
+        containerStyle={{ height: "100%", width: "100%" }}
       >
         <Route
-          exact path={['/', '/suche', '/liste', '/favoriten', '/info']} 
-          component={() => <FilterView />}
+          path={["/", "/suche", "/liste", "/favoriten", "/info"]}
+          render={() => <MarkerLayer data={data}/>}
         />
         <Tooltip />
         <LogoTile />
       </MapGL>
     </MapWrapper>
-  )
-}
+  );
+};
 
 export default withRouter(Map);

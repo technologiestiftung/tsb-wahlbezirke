@@ -1,20 +1,21 @@
-import React, { PureComponent } from 'react';
-import styled from 'styled-components';
-import { NavLink, withRouter, matchPath } from 'react-router-dom';
+import React from "react";
+import styled from "styled-components";
+import { NavLink, withRouter, matchPath } from "react-router-dom";
+import { useStoreActions } from 'easy-peasy';
 
-import ListIcon from '@material-ui/icons/List';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
-import FavIcon from '@material-ui/icons/FavoriteBorderOutlined';
-import SearchIcon from '@material-ui/icons/Search';
+import ListIcon from "@material-ui/icons/List";
+import InfoIcon from "@material-ui/icons/InfoOutlined";
+import SearchIcon from "@material-ui/icons/Search";
+import FavIcon from "@material-ui/icons/FavoriteBorder";
 
-import EdgeButton from 'components/EdgeButton';
-import { media } from 'styles/Utils';
+import EdgeButton from "components/EdgeButton";
+import { media } from "styles/Utils";
 
 const NavWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  box-shadow: ${ props => props.theme.boxShadow };
+  box-shadow: 0 2px 40px 0 rgba(30,55,145,0.15);
   flex-grow: 0;
   position: absolute;
   top: 15px;
@@ -22,8 +23,9 @@ const NavWrapper = styled.div`
   z-index: 1000;
 
   ${media.m`
-    transform: ${props => (props.isNavOpen ? 'translate3d(375px, 0, 0)' : 'none')};
-    transition: transform 500ms;
+    transform: ${(props) =>
+      props.isNavOpen ? "translate3d(375px, 0, 0)" : "none"};
+    transition: transform 375ms;
   `}
 `;
 
@@ -36,39 +38,43 @@ const NavItem = styled(NavLink)`
   text-decoration: none;
 `;
 
-
 const navConfig = [
-  // { path: '/suche', title: 'Suche und Filter', icon: <SearchIcon /> },
-  { path: '/liste', title: 'Listenansicht', icon: <ListIcon /> },
-  // { path: '/favoriten', title: 'Favoriten', icon: <FavIcon /> },
-  // { path: '/info', title: 'Info', icon: <InfoIcon/> },
+  { path: "/liste", title: "Listenansicht", icon: <ListIcon /> },
+  { path: "/suche", title: "Suche und Filter", icon: <SearchIcon /> },
+  { path: "/info", title: "Über das Projekt", icon: <InfoIcon /> },
+  { path: "/favoriten", title: "Favoriten", icon: <FavIcon /> },
 ];
 
-const Nav = p => {
+const Nav = (p) => {
   const { location } = p;
   const { pathname } = location;
+  const setHighlightData = useStoreActions(a => a.setHighlightData);
 
-  const isNavOpen = matchPath(pathname, {
-    path: navConfig.map(m => m.path),
-  }) !== null;
+  const isNavOpen =
+    matchPath(pathname, {
+      path: navConfig.map((m) => m.path),
+    }) !== null;
 
   return (
     <NavWrapper isNavOpen={isNavOpen}>
-      {navConfig.map(m => (
+      {navConfig.map((m) => (
         <NavItem
           exact
-          to={{ pathname: m.path, search: '' }}
-          // onClick={() => (this.handleClick(m.title))}
+          to={{ pathname: m.path, search: "" }}
           key={m.path}
+          onClick={() => setHighlightData(false)}
         >
-          <EdgeButton title={m.title} aria-label={m.title} isActive={pathname === m.path}>
+          <EdgeButton
+            title={m.title}
+            aria-label={m.title}
+            isActive={pathname === m.path}
+          >
             {m.icon}
           </EdgeButton>
         </NavItem>
       ))}
     </NavWrapper>
   );
-
-}
+};
 
 export default withRouter(Nav);
